@@ -15,19 +15,33 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        buildTypes.each {
+            it.buildConfigField 'String', 'Api', MoviedbAPI
+        }
     }
+
+
 }
 
+def butterKnife = '8.8.1'
+def retrofit = '2.1.0'
+def androidSupport = '27.1.1'
+def lombok = '1.18.0'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation "com.android.support:appcompat-v7:${androidSupport}"
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
-    implementation 'com.jakewharton:butterknife:8.8.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    implementation "com.jakewharton:butterknife:${butterKnife}"
+    implementation "com.android.support:support-v4:${androidSupport}"
+    implementation "com.android.support:recyclerview-v7:${androidSupport}"
+    implementation "com.android.support:design:${androidSupport}"
+    implementation "com.squareup.retrofit2:retrofit:${retrofit}"
+    implementation "com.squareup.retrofit2:converter-gson:${retrofit}"
+    compileOnly "org.projectlombok:lombok:${lombok}"
     testImplementation 'junit:junit:4.12'
+    annotationProcessor "com.jakewharton:butterknife-compiler:${butterKnife}"
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    compileOnly "org.projectlombok:lombok:1.18.0"
-    annotationProcessor 'org.projectlombok:lombok:1.18.0'
+    annotationProcessor "org.projectlombok:lombok:${lombok}"
 }

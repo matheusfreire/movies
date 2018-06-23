@@ -8,3 +8,4 @@ gradlew.bat
 /build
 /captures
 .externalNativeBuild
+gradle.properties

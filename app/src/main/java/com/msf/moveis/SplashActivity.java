@@ -1,6 +1,7 @@
 package com.msf.moveis;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.Toast;
@@ -15,7 +16,8 @@ public class SplashActivity extends Activity {
         final Runnable r = new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(SplashActivity.this, "Teste", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(SplashActivity.this,MovieListActivity.class);
+                startActivity(intent);
             }
         };
         handler.postDelayed(r, 2500);
