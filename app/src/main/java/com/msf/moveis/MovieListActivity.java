@@ -3,6 +3,8 @@ package com.msf.moveis;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -12,10 +14,9 @@ import android.widget.Toast;
 
 import com.msf.moveis.model.Movie;
 import com.msf.moveis.model.MovieList;
-import com.msf.moveis.utilities.MoviesApi;
-import com.msf.moveis.utilities.RetrofitClientInstance;
-
-import java.util.List;
+import com.msf.moveis.util.ListItemDecoration;
+import com.msf.moveis.util.MoviesApi;
+import com.msf.moveis.util.RetrofitClientInstance;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,7 +24,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MovieListActivity extends AppCompatActivity {
+public class MovieListActivity extends AppCompatActivity implements MoviesAdapter.MoviesOnClickListener{
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -43,6 +44,8 @@ public class MovieListActivity extends AppCompatActivity {
 
     @BindView(R.id.error_message)
     TextView mErrorMessage;
+
+    private MoviesAdapter mMoviesAdapter;
 
 
     @Override
@@ -68,7 +71,8 @@ public class MovieListActivity extends AppCompatActivity {
         call.enqueue(new Callback<MovieList>() {
             @Override
             public void onResponse(Call<MovieList> call, Response<MovieList> response) {
-                Toast.makeText(MovieListActivity.this, "Teste", Toast.LENGTH_SHORT).show();
+                mMoviesAdapter = new MoviesAdapter(response.body().getTotalResults(), response.body().getResults(), MovieListActivity.this);
+                setupRecyclerView(recyclerView);
                 progressLoading.setVisibility(View.INVISIBLE);
                 showRecyclerView(true);
             }
@@ -79,9 +83,16 @@ public class MovieListActivity extends AppCompatActivity {
                 showRecyclerView(false);
             }
         });
+        buildRecycler();
+//        recyclerView.setAdapter(adapter);
+    }
 
-        assert recyclerView != null;
-        setupRecyclerView(recyclerView);
+    private void buildRecycler() {
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.addItemDecoration(new ListItemDecoration(2, dpToPx(10)));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setHasFixedSize(true);
     }
 
     private void showRecyclerView(boolean showRecyclerView) {
@@ -92,7 +103,15 @@ public class MovieListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-//        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
+        recyclerView.setAdapter(mMoviesAdapter);
     }
 
+    public int dpToPx(int dp){
+        return (int) (dp * getResources().getDisplayMetrics().density);
+    }
+
+    @Override
+    public void onClickMovie(Movie movie) {
+        Toast.makeText(this, movie.getTitle(), Toast.LENGTH_SHORT).show();
+    }
 }

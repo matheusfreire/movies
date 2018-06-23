@@ -1,4 +1,4 @@
-package com.msf.moveis.utilities;
+package com.msf.moveis.util;
 
 import com.msf.moveis.model.Movie;
 import com.msf.moveis.model.MovieList;

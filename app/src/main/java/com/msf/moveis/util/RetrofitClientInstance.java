@@ -1,4 +1,4 @@
-package com.msf.moveis.utilities;
+package com.msf.moveis.util;
 
 import android.support.annotation.NonNull;
 
@@ -11,12 +11,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitClientInstance {
 
     private static Retrofit retrofit;
-    private static final String BASE_URL = "https://api.themoviedb.org/3/";
 
     public static Retrofit getRetrofitInstance() {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
+                    .baseUrl(NetworkEndPoints.MOVIES_API.getUrl())
                     .addConverterFactory(GsonConverterFactory.create(createGson()))
                     .build();
         }
