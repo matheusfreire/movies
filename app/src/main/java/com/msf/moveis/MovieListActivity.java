@@ -1,5 +1,6 @@
 package com.msf.moveis;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.msf.moveis.model.Movie;
 import com.msf.moveis.model.MovieList;
@@ -112,6 +112,8 @@ public class MovieListActivity extends AppCompatActivity implements MoviesAdapte
 
     @Override
     public void onClickMovie(Movie movie) {
-        Toast.makeText(this, movie.getTitle(), Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this,MovieDetailActivity.class);
+        intent.putExtra("movie", movie);
+        startActivity(intent);
     }
 }
