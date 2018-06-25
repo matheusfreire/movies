@@ -7,6 +7,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -16,6 +17,7 @@ public interface MoviesApi {
     Call<Movie> callDetail(@Path("id") int code, @Query("api_key") String apiKey);
 
     @GET("movie/popular")
+    @Headers({"Accept: application/json"})
     Call<MovieList> callListPopular(@Query("api_key") String apiKey);
 
     @GET("movie/top_rated")

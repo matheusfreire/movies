@@ -2,6 +2,7 @@ package com.msf.moveis;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,13 +43,16 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
 
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
-        Movie movie = listMovies.get(position);
-        holder.title.setText(movie.getTitle());
-        holder.rating.setText(String.valueOf(movie.getVoteAverage()));
-        Picasso.get()
-                .load(NetworkEndPoints.IMAGE_API.getUrl() + getItem(position).getPoster())
-                .into(holder.thumbnail);
-//        Glide.with(mContext).load(album.getThumbnail()).into(holder.thumbnail);
+        try{
+            Movie movie = listMovies.get(position);
+            holder.title.setText(movie.getTitle());
+            holder.rating.setText(String.valueOf(movie.getVoteAverage()));
+            Picasso.get()
+                    .load(NetworkEndPoints.IMAGE_API.getUrl() + getItem(position).getPoster())
+                    .into(holder.thumbnail);
+        } catch (IndexOutOfBoundsException e){
+            Log.d("Adapter", "Exception");
+        }
     }
 
     private Movie getItem(int position){
