@@ -3,6 +3,7 @@ package com.msf.moveis;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -111,9 +112,12 @@ public class MovieListActivity extends AppCompatActivity implements MoviesAdapte
     }
 
     @Override
-    public void onClickMovie(Movie movie) {
+    public void onClickMovie(Movie movie, View... views) {
         Intent intent = new Intent(this,MovieDetailActivity.class);
         intent.putExtra("movie", movie);
+        ActivityOptionsCompat options = ActivityOptionsCompat.
+                makeSceneTransitionAnimation(this, views[0], "titleMovie");
+        startActivity(intent, options.toBundle());
         startActivity(intent);
     }
 }

@@ -25,7 +25,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
     private MoviesOnClickListener listener;
 
     public interface MoviesOnClickListener {
-        void onClickMovie(Movie movie);
+        void onClickMovie(Movie movie, View... views);
     }
 
     public MoviesAdapter(int total, List<Movie> movies, MoviesOnClickListener onClickListener){
@@ -83,7 +83,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         @Override
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
-            listener.onClickMovie(getItem(adapterPosition));
+            listener.onClickMovie(getItem(adapterPosition), title);
         }
     }
 }
