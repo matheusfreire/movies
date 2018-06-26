@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -97,9 +98,7 @@ public class MovieListActivity extends AppCompatActivity implements MoviesAdapte
     }
 
     private void showRecyclerView(boolean showRecyclerView) {
-        /* First, make sure the error is invisible */
         mErrorMessage.setVisibility(showRecyclerView ? View.INVISIBLE : View.VISIBLE);
-        /* Then, make sure the weather data is visible */
         recyclerView.setVisibility(showRecyclerView ? View.VISIBLE : View.INVISIBLE);
     }
 
@@ -118,6 +117,5 @@ public class MovieListActivity extends AppCompatActivity implements MoviesAdapte
         ActivityOptionsCompat options = ActivityOptionsCompat.
                 makeSceneTransitionAnimation(this, views[0], "titleMovie");
         startActivity(intent, options.toBundle());
-        startActivity(intent);
     }
 }

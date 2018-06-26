@@ -1,13 +1,14 @@
 package com.msf.moveis.model;
 
-import com.google.gson.annotations.SerializedName;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-import java.io.Serializable;
+import com.google.gson.annotations.SerializedName;
 
 import lombok.Data;
 
 @Data
-public class Movie implements Serializable {
+public class Movie implements Parcelable {
 
     @SerializedName("id")
     private long id;
@@ -26,4 +27,40 @@ public class Movie implements Serializable {
 
     @SerializedName("poster_path")
     private String poster;
+
+    protected Movie(Parcel in) {
+        id = in.readLong();
+        title = in.readString();
+        originalTitle = in.readString();
+        overview = in.readString();
+        voteAverage = in.readDouble();
+        poster = in.readString();
+    }
+
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(title);
+        dest.writeString(originalTitle);
+        dest.writeString(overview);
+        dest.writeDouble(voteAverage);
+        dest.writeString(poster);
+    }
 }

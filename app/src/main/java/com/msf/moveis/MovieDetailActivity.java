@@ -1,11 +1,20 @@
 package com.msf.moveis;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.Window;
+
+import com.msf.moveis.model.Movie;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * An activity representing a single Movie detail screen. This
@@ -14,12 +23,17 @@ import android.view.MenuItem;
  * in a {@link MovieListActivity}.
  */
 public class MovieDetailActivity extends AppCompatActivity {
+    @BindView(R.id.toolbar_detail)
+    CollapsingToolbarLayout appBarLayout;
+
+    @BindView(R.id.detail_toolbar)
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
-        Toolbar toolbar = findViewById(R.id.detail_toolbar);
+        ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
         // Show the Up button in the action bar.
@@ -38,16 +52,19 @@ public class MovieDetailActivity extends AppCompatActivity {
         // http://developer.android.com/guide/components/fragments.html
         //
         if (savedInstanceState == null) {
-            // Create the detail fragment and add it to the activity
-            // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(MovieDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(MovieDetailFragment.ARG_ITEM_ID));
+            Bundle extras = getIntent().getExtras();
+            Movie movie = extras.getParcelable("movie");
+            arguments.putParcelable("movie", movie);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                if (appBarLayout != null) {
+                    ViewCompat.setTransitionName(appBarLayout, "titleMovie");
+                    appBarLayout.setTitle(movie.getTitle());
+                }
+            }
             MovieDetailFragment fragment = new MovieDetailFragment();
             fragment.setArguments(arguments);
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.movie_detail_container, fragment)
-                    .commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.movie_detail_container, fragment).commit();
         }
     }
 
@@ -60,4 +77,5 @@ public class MovieDetailActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }
