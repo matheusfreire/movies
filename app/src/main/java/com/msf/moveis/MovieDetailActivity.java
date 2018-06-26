@@ -10,8 +10,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.Window;
+import android.widget.ImageView;
 
 import com.msf.moveis.model.Movie;
+import com.msf.moveis.util.NetworkEndPoints;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,6 +32,9 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     @BindView(R.id.detail_toolbar)
     Toolbar toolbar;
+
+    @BindView(R.id.poster)
+    ImageView poster;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +66,21 @@ public class MovieDetailActivity extends AppCompatActivity {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 if (appBarLayout != null) {
                     ViewCompat.setTransitionName(appBarLayout, "titleMovie");
+                    ViewCompat.setTransitionName(poster,"poster");
                     appBarLayout.setTitle(movie.getTitle());
+                    Picasso.get()
+                            .load(NetworkEndPoints.IMAGE_API.getUrl() + movie.getPoster())
+                            .into(poster, new Callback() {
+                                @Override
+                                public void onSuccess() {
+                                    supportStartPostponedEnterTransition();
+                                }
+
+                                @Override
+                                public void onError(Exception e) {
+                                    supportStartPostponedEnterTransition();
+                                }
+                            });
                 }
             }
             MovieDetailFragment fragment = new MovieDetailFragment();

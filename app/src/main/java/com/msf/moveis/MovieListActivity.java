@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -115,7 +116,7 @@ public class MovieListActivity extends AppCompatActivity implements MoviesAdapte
         Intent intent = new Intent(this,MovieDetailActivity.class);
         intent.putExtra("movie", movie);
         ActivityOptionsCompat options = ActivityOptionsCompat.
-                makeSceneTransitionAnimation(this, views[0], "titleMovie");
+                makeSceneTransitionAnimation(this, Pair.create(views[0], "poster"),Pair.create(views[1], "titleMovie"));
         startActivity(intent, options.toBundle());
     }
 }

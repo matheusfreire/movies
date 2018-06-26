@@ -24,7 +24,8 @@
                 android:layout_height="250dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/thumbnail"
-                android:scaleType="fitXY" />
+                android:scaleType="fitXY"
+                android:transitionName="poster"/>
 
             <TextView
                 android:id="@+id/title"
