@@ -1,10 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/movie_detail"
-    style="?android:attr/textAppearanceLarge"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:textIsSelectable="true"
-    tools:context=".MovieDetailFragment" />
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".MovieDetailFragment"
+    android:background="@color/white">
+
+    <LinearLayout android:id="@+id/movies_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_alignParentTop="true"
+        android:paddingTop="10dp">
+
+        <!--<TextView-->
+            <!--android:id="@+id/title_movie"-->
+            <!--style="?android:attr/textAppearanceLarge"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Batman Knight Rises"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingBottom="5dp"/>-->
+
+        <TextView
+            android:id="@+id/director_movie"
+            style="?android:attr/textAppearanceMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Batman Knight Rises"
+            android:gravity="center"
+            android:paddingBottom="5dp"/>
+
+        <TextView
+            android:id="@+id/year_movie"
+            style="?android:attr/textAppearanceSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Batman Knight Rises"
+            android:gravity="center"
+            android:paddingBottom="10dp"
+            android:paddingTop="5dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/rates_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@+id/movies_info"
+        android:background="@color/softGray"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:paddingTop="10dp">
+
+            <TextView
+                android:id="@+id/rating"
+                style="?android:attr/textAppearanceLarge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingBottom="5dp"/>
+
+            <RatingBar
+                android:id="@+id/ratebar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numStars="5"
+                android:stepSize="0.1"/>
+
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@+id/rates_info"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:padding="15dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="15dp">
+
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:chipText="@string/hello_world"
+                app:chipStartPadding="12dp"/>
+
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:chipText="@string/hello_world"
+                app:chipStartPadding="12dp"/>
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/txt_description"
+            style="?android:attr/textAppearanceLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingBottom="5dp"
+            android:text="In the continuing saga of the Corleone crime family, a young Vito Corleone grows up in Sicily and in 1910s New York. In the 1950s, Michael Corleone attempts to expand the family business into Las Vegas, Hollywood and Cuba."/>
+
+    </LinearLayout>
+
+
+</RelativeLayout>
