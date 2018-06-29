@@ -61,13 +61,18 @@ public class MovieDetailActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             Bundle arguments = new Bundle();
             Bundle extras = getIntent().getExtras();
-            Movie movie = extras.getParcelable("movie");
+            Movie movie = null;
+            if (extras != null) {
+                movie = extras.getParcelable("movie");
+            }
             arguments.putParcelable("movie", movie);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 if (appBarLayout != null) {
                     ViewCompat.setTransitionName(appBarLayout, "titleMovie");
                     ViewCompat.setTransitionName(poster,"poster");
-                    appBarLayout.setTitle(movie.getTitle());
+                    if (movie != null) {
+                        appBarLayout.setTitle(movie.getTitle());
+                    }
                     Picasso.get()
                             .load(NetworkEndPoints.IMAGE_API.getUrl() + movie.getPoster())
                             .into(poster, new Callback() {

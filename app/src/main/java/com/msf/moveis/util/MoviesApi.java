@@ -14,7 +14,7 @@ import retrofit2.http.Query;
 public interface MoviesApi {
 
     @GET("movie/{id}")
-    Call<Movie> callDetail(@Path("id") int code, @Query("api_key") String apiKey);
+    Call<Movie> callDetail(@Path("id") long code, @Query("api_key") String apiKey);
 
     @GET("movie/popular")
     @Headers({"Accept: application/json"})

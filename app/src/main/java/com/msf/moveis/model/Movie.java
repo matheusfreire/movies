@@ -5,6 +5,9 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+import java.util.List;
+
 import lombok.Data;
 
 @Data
@@ -28,6 +31,15 @@ public class Movie implements Parcelable {
     @SerializedName("poster_path")
     private String poster;
 
+    @SerializedName("genres")
+    private List<Genre> genres;
+
+    @SerializedName("tagline")
+    private String tagLine;
+
+    @SerializedName("release_date")
+    private Date releaseDate;
+
     protected Movie(Parcel in) {
         id = in.readLong();
         title = in.readString();
@@ -35,6 +47,7 @@ public class Movie implements Parcelable {
         overview = in.readString();
         voteAverage = in.readDouble();
         poster = in.readString();
+        tagLine = in.readString();
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -62,5 +75,6 @@ public class Movie implements Parcelable {
         dest.writeString(overview);
         dest.writeDouble(voteAverage);
         dest.writeString(poster);
+        dest.writeString(tagLine);
     }
 }
