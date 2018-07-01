@@ -11,6 +11,9 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -68,13 +71,19 @@ public class MovieListActivity extends AppCompatActivity implements MoviesAdapte
             // activity should be in two-pane mode.
             mTwoPane = true;
         }
+        getMoviesPopular();
+        buildRecycler();
+    }
+
+    private void getMoviesPopular() {
         progressLoading.setVisibility(View.VISIBLE);
+        recyclerView.setAdapter(null);
         MoviesApi service = RetrofitClientInstance.getRetrofitInstance().create(MoviesApi.class);
         Call<MovieList> call = service.callListPopular(BuildConfig.Api);
         call.enqueue(new Callback<MovieList>() {
             @Override
             public void onResponse(Call<MovieList> call, Response<MovieList> response) {
-                mMoviesAdapter = new MoviesAdapter(response.body().getTotalResults(), response.body().getResults(), MovieListActivity.this);
+                mMoviesAdapter = new MoviesAdapter(response.body().getResults().size(), response.body().getResults(), MovieListActivity.this);
                 setupRecyclerView(recyclerView);
                 progressLoading.setVisibility(View.INVISIBLE);
                 showRecyclerView(true);
@@ -86,8 +95,50 @@ public class MovieListActivity extends AppCompatActivity implements MoviesAdapte
                 showRecyclerView(false);
             }
         });
-        buildRecycler();
-//        recyclerView.setAdapter(adapter);
+    }
+
+    private void getMoviesMoreVoted() {
+        progressLoading.setVisibility(View.VISIBLE);
+        recyclerView.setAdapter(null);
+        MoviesApi service = RetrofitClientInstance.getRetrofitInstance().create(MoviesApi.class);
+        Call<MovieList> call = service.callListTopRated(BuildConfig.Api);
+        call.enqueue(new Callback<MovieList>() {
+            @Override
+            public void onResponse(Call<MovieList> call, Response<MovieList> response) {
+                mMoviesAdapter = new MoviesAdapter(response.body().getResults().size(), response.body().getResults(), MovieListActivity.this);
+                setupRecyclerView(recyclerView);
+                progressLoading.setVisibility(View.INVISIBLE);
+                showRecyclerView(true);
+            }
+
+            @Override
+            public void onFailure(Call<MovieList> call, Throwable t) {
+                progressLoading.setVisibility(View.INVISIBLE);
+                showRecyclerView(false);
+            }
+        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.action_popular:
+                getMoviesPopular();
+                break;
+            case R.id.action_by_voted:
+                getMoviesMoreVoted();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void buildRecycler() {

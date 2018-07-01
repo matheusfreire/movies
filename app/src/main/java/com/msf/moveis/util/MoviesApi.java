@@ -21,5 +21,5 @@ public interface MoviesApi {
     Call<MovieList> callListPopular(@Query("api_key") String apiKey);
 
     @GET("movie/top_rated")
-    Call<List<Movie>> callListTopRated(@Query("api_key") String apiKey);
+    Call<MovieList> callListTopRated(@Query("api_key") String apiKey);
 }

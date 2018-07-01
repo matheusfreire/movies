@@ -38,7 +38,7 @@
                 android:paddingBottom="5dp"/>
 
             <TextView
-                android:id="@+id/year_movie"
+                android:id="@+id/released_date_movie"
                 style="?android:attr/textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

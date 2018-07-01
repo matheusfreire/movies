@@ -16,7 +16,7 @@ import com.msf.moveis.model.Movie;
 import com.msf.moveis.util.MoviesApi;
 import com.msf.moveis.util.RetrofitClientInstance;
 
-import java.util.Calendar;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import butterknife.BindView;
@@ -41,8 +41,8 @@ public class MovieDetailFragment extends Fragment {
     @BindView(R.id.director_movie)
     TextView mDirectorTxt;
 
-    @BindView(R.id.year_movie)
-    TextView mYear;
+    @BindView(R.id.released_date_movie)
+    TextView mReleasedDate;
 
     @BindView(R.id.rating)
     TextView mRating;
@@ -99,7 +99,7 @@ public class MovieDetailFragment extends Fragment {
         mDescription.setText(movieResult.getOverview());
         mRating.setText(String.valueOf(movieResult.getVoteAverage()).concat("/10"));
         mDirectorTxt.setText(movieResult.getTagLine());
-        mYear.setText(getYear(movieResult.getReleaseDate()));
+        mReleasedDate.setText(getDateReleased(movieResult.getReleaseDate()));
         mRatebar.setRating(getVoteAverage(movieResult));
         animateRatingbar(mRatebar);
     }
@@ -116,9 +116,8 @@ public class MovieDetailFragment extends Fragment {
         return (float) movieResult.getVoteAverage()/2;
     }
 
-    private String getYear(Date releaseDate) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(releaseDate);
-        return String.valueOf(calendar.get(Calendar.YEAR));
+    private String getDateReleased(Date releaseDate) {
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        return df.format(releaseDate);
     }
 }
