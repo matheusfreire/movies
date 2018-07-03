@@ -79,7 +79,7 @@ public class MovieListActivity extends AppCompatActivity implements MoviesAdapte
         progressLoading.setVisibility(View.VISIBLE);
         recyclerView.setAdapter(null);
         MoviesApi service = RetrofitClientInstance.getRetrofitInstance().create(MoviesApi.class);
-        Call<MovieList> call = service.callListPopular(BuildConfig.Api);
+        Call<MovieList> call = service.callListPopular(BuildConfig.API_KEY);
         call.enqueue(new Callback<MovieList>() {
             @Override
             public void onResponse(Call<MovieList> call, Response<MovieList> response) {
@@ -101,7 +101,7 @@ public class MovieListActivity extends AppCompatActivity implements MoviesAdapte
         progressLoading.setVisibility(View.VISIBLE);
         recyclerView.setAdapter(null);
         MoviesApi service = RetrofitClientInstance.getRetrofitInstance().create(MoviesApi.class);
-        Call<MovieList> call = service.callListTopRated(BuildConfig.Api);
+        Call<MovieList> call = service.callListTopRated(BuildConfig.API_KEY);
         call.enqueue(new Callback<MovieList>() {
             @Override
             public void onResponse(Call<MovieList> call, Response<MovieList> response) {

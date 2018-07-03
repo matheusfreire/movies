@@ -74,7 +74,7 @@ public class MovieDetailFragment extends Fragment {
             progressLoading.setVisibility(View.VISIBLE);
             relativeLayoutDetail.setVisibility(View.INVISIBLE);
             MoviesApi service = RetrofitClientInstance.getRetrofitInstance().create(MoviesApi.class);
-            Call<Movie> call = service.callDetail(mItem.getId(),BuildConfig.Api);
+            Call<Movie> call = service.callDetail(mItem.getId(),BuildConfig.API_KEY);
             call.enqueue(new Callback<Movie>() {
                 @Override
                 public void onResponse(Call<Movie> call, Response<Movie> response) {
