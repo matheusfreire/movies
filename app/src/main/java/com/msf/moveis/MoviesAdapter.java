@@ -20,18 +20,18 @@ import butterknife.ButterKnife;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewHolder> {
 
-    private int total;
-    private List<Movie> listMovies;
-    private MoviesOnClickListener listener;
+    private int mTotal;
+    private List<Movie> mListMovies;
+    private MoviesOnClickListener mListener;
 
     public interface MoviesOnClickListener {
         void onClickMovie(Movie movie, View... views);
     }
 
-    public MoviesAdapter(int total, List<Movie> movies, MoviesOnClickListener onClickListener){
-        this.total = total;
-        this.listMovies = movies;
-        this.listener = onClickListener;
+    public MoviesAdapter(int mTotal, List<Movie> movies, MoviesOnClickListener onClickListener){
+        this.mTotal = mTotal;
+        this.mListMovies = movies;
+        this.mListener = onClickListener;
     }
 
     @NonNull
@@ -44,35 +44,35 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
         try{
-            Movie movie = listMovies.get(position);
-            holder.title.setText(movie.getTitle());
-            holder.rating.setText(String.valueOf(movie.getVoteAverage()));
+            Movie movie = mListMovies.get(position);
+            holder.mTitle.setText(movie.getTitle());
+            holder.mRating.setText(String.valueOf(movie.getVoteAverage()));
             Picasso.get()
                     .load(NetworkEndPoints.IMAGE_API.getUrl() + getItem(position).getPoster())
-                    .into(holder.thumbnail);
+                    .into(holder.mThumbnail);
         } catch (IndexOutOfBoundsException e){
             Log.d("Adapter", "Exception");
         }
     }
 
     private Movie getItem(int position){
-        return listMovies.get(position);
+        return mListMovies.get(position);
     }
 
     @Override
     public int getItemCount() {
-        return total;
+        return mTotal;
     }
 
     class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.title)
-        TextView title;
+        TextView mTitle;
 
         @BindView(R.id.rating)
-        TextView rating;
+        TextView mRating;
 
         @BindView(R.id.thumbnail)
-        ImageView thumbnail;
+        ImageView mThumbnail;
 
         MovieViewHolder(View view) {
             super(view);
@@ -83,7 +83,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         @Override
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
-            listener.onClickMovie(getItem(adapterPosition), title, thumbnail);
+            mListener.onClickMovie(getItem(adapterPosition), mTitle, mThumbnail);
         }
     }
 }

@@ -53,6 +53,8 @@ public class MovieDetailFragment extends Fragment {
     @BindView(R.id.txt_description)
     TextView mDescription;
 
+    private CallBackDropImage mListener;
+
 
     public MovieDetailFragment() {
     }
@@ -96,6 +98,7 @@ public class MovieDetailFragment extends Fragment {
     }
 
     private void buildInterface(Movie movieResult) {
+        mListener.onRequestBackdrop(movieResult.getBackDropImage());
         mDescription.setText(movieResult.getOverview());
         mRating.setText(String.valueOf(movieResult.getVoteAverage()).concat("/10"));
         mDirectorTxt.setText(movieResult.getTagLine());
@@ -106,8 +109,7 @@ public class MovieDetailFragment extends Fragment {
 
     private void animateRatingbar(RatingBar mRatebar) {
         float current = mRatebar.getRating();
-
-        ObjectAnimator anim = ObjectAnimator.ofFloat(mRatebar, "rating", 0, current);
+        ObjectAnimator anim = ObjectAnimator.ofFloat(mRatebar, "mRating", 0, current);
         anim.setDuration(1800);
         anim.start();
     }
@@ -119,5 +121,15 @@ public class MovieDetailFragment extends Fragment {
     private String getDateReleased(Date releaseDate) {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         return df.format(releaseDate);
+    }
+
+    public static MovieDetailFragment getInstance(CallBackDropImage callBackDropImage) {
+        MovieDetailFragment movieDetailFragment = new MovieDetailFragment();
+        movieDetailFragment.mListener = callBackDropImage;
+        return movieDetailFragment;
+    }
+
+    public interface CallBackDropImage{
+        void onRequestBackdrop(String backDropPath);
     }
 }

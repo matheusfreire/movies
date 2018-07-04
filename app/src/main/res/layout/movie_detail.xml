@@ -20,15 +20,6 @@
             android:layout_alignParentTop="true"
             android:paddingTop="10dp">
 
-            <!--<TextView-->
-            <!--android:id="@+id/title_movie"-->
-            <!--style="?android:attr/textAppearanceLarge"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="Batman Knight Rises"-->
-            <!--android:gravity="center"-->
-            <!--android:paddingBottom="5dp"/>-->
-
             <TextView
                 android:id="@+id/director_movie"
                 style="?android:attr/textAppearanceMedium"
@@ -83,24 +74,6 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:padding="15dp">
-
-            <!--<LinearLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:orientation="horizontal"-->
-                <!--android:padding="15dp">-->
-
-                <!--<com.google.android.material.chip.Chip-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--app:chipText="@string/hello_world"/>-->
-
-                <!--<com.google.android.material.chip.Chip-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--app:chipText="@string/hello_world"/>-->
-            <!--</LinearLayout>-->
-
 
             <TextView
                 android:id="@+id/txt_description"

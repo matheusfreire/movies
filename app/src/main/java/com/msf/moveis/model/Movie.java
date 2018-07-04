@@ -40,6 +40,9 @@ public class Movie implements Parcelable {
     @SerializedName("release_date")
     private Date releaseDate;
 
+    @SerializedName("backdrop_path")
+    private String backDropImage;
+
     protected Movie(Parcel in) {
         id = in.readLong();
         title = in.readString();

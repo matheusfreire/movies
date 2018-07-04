@@ -26,7 +26,7 @@ import butterknife.ButterKnife;
  * item details are presented side-by-side with a list of items
  * in a {@link MovieListActivity}.
  */
-public class MovieDetailActivity extends AppCompatActivity {
+public class MovieDetailActivity extends AppCompatActivity implements MovieDetailFragment.CallBackDropImage{
     @BindView(R.id.toolbar_detail)
     CollapsingToolbarLayout appBarLayout;
 
@@ -73,22 +73,9 @@ public class MovieDetailActivity extends AppCompatActivity {
                     if (movie != null) {
                         appBarLayout.setTitle(movie.getTitle());
                     }
-                    Picasso.get()
-                            .load(NetworkEndPoints.IMAGE_API.getUrl() + movie.getPoster())
-                            .into(poster, new Callback() {
-                                @Override
-                                public void onSuccess() {
-                                    supportStartPostponedEnterTransition();
-                                }
-
-                                @Override
-                                public void onError(Exception e) {
-                                    supportStartPostponedEnterTransition();
-                                }
-                            });
                 }
             }
-            MovieDetailFragment fragment = new MovieDetailFragment();
+            MovieDetailFragment fragment = MovieDetailFragment.getInstance(this);
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction().add(R.id.movie_detail_container, fragment).commit();
         }
@@ -104,4 +91,20 @@ public class MovieDetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onRequestBackdrop(String backDropPath) {
+        Picasso.get()
+                .load(NetworkEndPoints.IMAGE_API.getUrl() + backDropPath)
+                .into(poster, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        supportStartPostponedEnterTransition();
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        supportStartPostponedEnterTransition();
+                    }
+                });
+    }
 }

@@ -1,11 +1,14 @@
 package com.msf.moveis;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.msf.moveis.model.Movie;
@@ -39,20 +43,24 @@ public class MovieListActivity extends AppCompatActivity implements MoviesAdapte
     private boolean mTwoPane;
 
     @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    Toolbar mToolbar;
 
     @BindView(R.id.movie_list)
-    RecyclerView recyclerView;
+    RecyclerView mRecyclerView;
 
 
     @BindView(R.id.progress_loading)
-    ProgressBar progressLoading;
+    ProgressBar mProgressLoading;
 
     @BindView(R.id.error_message)
     TextView mErrorMessage;
 
+    @BindView(R.id.relative_layout_list)
+    RelativeLayout mRelativeLayoutList;
+
     private MoviesAdapter mMoviesAdapter;
 
+    private static final int NUM_COLUMNS = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +68,8 @@ public class MovieListActivity extends AppCompatActivity implements MoviesAdapte
         setContentView(R.layout.activity_movie_list);
         ButterKnife.bind(this);
 
-        setSupportActionBar(toolbar);
-        toolbar.setTitle(R.string.app_name);
+        setSupportActionBar(mToolbar);
+        mToolbar.setTitle(R.string.app_name);
 
 
         if (findViewById(R.id.movie_detail_container) != null) {
@@ -71,52 +79,53 @@ public class MovieListActivity extends AppCompatActivity implements MoviesAdapte
             // activity should be in two-pane mode.
             mTwoPane = true;
         }
-        getMoviesPopular();
+        getMovies(RetrofitClientInstance.getRetrofitInstance().create(MoviesApi.class).callListPopular(BuildConfig.Api));
         buildRecycler();
     }
 
-    private void getMoviesPopular() {
-        progressLoading.setVisibility(View.VISIBLE);
-        recyclerView.setAdapter(null);
-        MoviesApi service = RetrofitClientInstance.getRetrofitInstance().create(MoviesApi.class);
-        Call<MovieList> call = service.callListPopular(BuildConfig.Api);
-        call.enqueue(new Callback<MovieList>() {
-            @Override
-            public void onResponse(Call<MovieList> call, Response<MovieList> response) {
-                mMoviesAdapter = new MoviesAdapter(response.body().getResults().size(), response.body().getResults(), MovieListActivity.this);
-                setupRecyclerView(recyclerView);
-                progressLoading.setVisibility(View.INVISIBLE);
-                showRecyclerView(true);
-            }
+    private void getMovies(Call<MovieList> request) {
+        if(isOnline()){
+            mProgressLoading.setVisibility(View.VISIBLE);
+            mRecyclerView.setAdapter(null);
+            request.enqueue(new Callback<MovieList>() {
+                @Override
+                public void onResponse(Call<MovieList> call, Response<MovieList> response) {
+                    mMoviesAdapter = new MoviesAdapter(response.body().getResults().size(), response.body().getResults(), MovieListActivity.this);
+                    setupRecyclerView(mRecyclerView);
+                    mProgressLoading.setVisibility(View.INVISIBLE);
+                    showRecyclerView(true);
+                }
 
-            @Override
-            public void onFailure(Call<MovieList> call, Throwable t) {
-                progressLoading.setVisibility(View.INVISIBLE);
-                showRecyclerView(false);
-            }
-        });
+                @Override
+                public void onFailure(Call<MovieList> call, Throwable t) {
+                    mProgressLoading.setVisibility(View.INVISIBLE);
+                    showRecyclerView(false);
+                }
+
+            });
+        } else {
+            buidlNetworkMessage();
+        }
     }
 
-    private void getMoviesMoreVoted() {
-        progressLoading.setVisibility(View.VISIBLE);
-        recyclerView.setAdapter(null);
-        MoviesApi service = RetrofitClientInstance.getRetrofitInstance().create(MoviesApi.class);
-        Call<MovieList> call = service.callListTopRated(BuildConfig.Api);
-        call.enqueue(new Callback<MovieList>() {
+    private void buidlNetworkMessage() {
+        mErrorMessage.setText(R.string.no_network);
+        mRecyclerView.setAdapter(null);
+        showRecyclerView(false);
+        Snackbar mySnackbar = Snackbar.make(mRelativeLayoutList,R.string.try_again, Snackbar.LENGTH_SHORT);
+        mySnackbar.setAction(R.string.yes, new View.OnClickListener() {
             @Override
-            public void onResponse(Call<MovieList> call, Response<MovieList> response) {
-                mMoviesAdapter = new MoviesAdapter(response.body().getResults().size(), response.body().getResults(), MovieListActivity.this);
-                setupRecyclerView(recyclerView);
-                progressLoading.setVisibility(View.INVISIBLE);
-                showRecyclerView(true);
-            }
-
-            @Override
-            public void onFailure(Call<MovieList> call, Throwable t) {
-                progressLoading.setVisibility(View.INVISIBLE);
-                showRecyclerView(false);
+            public void onClick(View v) {
+                getMovies(RetrofitClientInstance.getRetrofitInstance().create(MoviesApi.class).callListPopular(BuildConfig.Api));
             }
         });
+        mySnackbar.show();
+    }
+
+    public boolean isOnline(){
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
     }
 
     @Override
@@ -131,27 +140,26 @@ public class MovieListActivity extends AppCompatActivity implements MoviesAdapte
         int id = item.getItemId();
         switch (id){
             case R.id.action_popular:
-                getMoviesPopular();
+                getMovies(RetrofitClientInstance.getRetrofitInstance().create(MoviesApi.class).callListPopular(BuildConfig.Api));
                 break;
             case R.id.action_by_voted:
-                getMoviesMoreVoted();
+                getMovies(RetrofitClientInstance.getRetrofitInstance().create(MoviesApi.class).callListTopRated(BuildConfig.Api));
                 break;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
     private void buildRecycler() {
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.addItemDecoration(new ListItemDecoration(2, dpToPx(10)));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, NUM_COLUMNS);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.addItemDecoration(new ListItemDecoration(2, dpToPx(10)));
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setHasFixedSize(true);
     }
 
     private void showRecyclerView(boolean showRecyclerView) {
         mErrorMessage.setVisibility(showRecyclerView ? View.INVISIBLE : View.VISIBLE);
-        recyclerView.setVisibility(showRecyclerView ? View.VISIBLE : View.INVISIBLE);
+        mRecyclerView.setVisibility(showRecyclerView ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
