@@ -14,4 +14,8 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="reviews">Reviews</string>
+    <string name="videos">Videos</string>
+    <string name="movie">Movie</string>
+    <string name="youtube_tm">youtube logo</string>
 </resources>

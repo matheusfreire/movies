@@ -8,7 +8,7 @@
     <RelativeLayout android:id="@+id/relative_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.msf.movies.MovieDetailFragment"
+        tools:context="com.msf.movies.fragment.MovieDetailFragment"
         android:background="@color/white">
 
         <LinearLayout android:id="@+id/movies_info"
@@ -83,6 +83,29 @@
                 android:gravity="center"
                 android:paddingBottom="5dp" />
         </LinearLayout>
+
+        <View style="@style/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/description"
+            android:layout_above="@+id/view_videos"/>
+
+        <include android:id="@+id/view_videos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/description"
+            layout="@layout/videos"/>
+
+        <View style="@style/divider"
+            android:layout_below="@+id/view_videos"
+            android:layout_above="@+id/view_reviews"/>
+
+        <include android:id="@+id/view_reviews"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view_videos"
+            layout="@layout/reviews"/>
+
 
     </RelativeLayout>
 

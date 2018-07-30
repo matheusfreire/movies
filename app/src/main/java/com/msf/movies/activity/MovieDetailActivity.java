@@ -1,4 +1,4 @@
-package com.msf.movies;
+package com.msf.movies.activity;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -10,6 +10,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
+import com.msf.movies.fragment.MovieDetailFragment;
+import com.msf.movies.R;
 import com.msf.movies.model.Movie;
 import com.msf.movies.util.NetworkEndPoints;
 import com.squareup.picasso.Callback;
@@ -24,7 +26,7 @@ import butterknife.ButterKnife;
  * item details are presented side-by-side with a list of items
  * in a {@link MovieListActivity}.
  */
-public class MovieDetailActivity extends AppCompatActivity implements MovieDetailFragment.CallBackDropImage{
+public class MovieDetailActivity extends AppCompatActivity implements MovieDetailFragment.CallBackDropImage {
     @BindView(R.id.toolbar_detail)
     CollapsingToolbarLayout appBarLayout;
 

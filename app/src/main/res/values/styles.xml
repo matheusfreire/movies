@@ -18,4 +18,10 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="divider">
+        <item name="android:background">?android:attr/listDivider</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">5dp</item>
+    </style>
+
 </resources>

@@ -1,4 +1,4 @@
-package com.msf.movies;
+package com.msf.movies.activity;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+
+import com.msf.movies.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.msf.movies.SplashActivity">
+        <activity android:name="com.msf.movies.activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,19 +20,19 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.msf.movies.MovieListActivity"
+            android:name="com.msf.movies.activity.MovieListActivity"
             android:label="@string/title_movie_list"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.msf.movies.MovieDetailActivity"
-            android:parentActivityName="com.msf.movies.MovieListActivity"
+            android:name="com.msf.movies.activity.MovieDetailActivity"
+            android:parentActivityName="com.msf.movies.activity.MovieListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.msf.movies.MovieListActivity" />
+                android:value="com.msf.movies.activity.MovieListActivity" />
         </activity>
         <activity
-            android:name="com.msf.movies.MainActivity"
+            android:name="com.msf.movies.activity.MainActivity"
             android:label="@string/title_activity_main"/>
     </application>
 

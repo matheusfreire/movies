@@ -1,10 +1,14 @@
-package com.msf.movies;
+package com.msf.movies.fragment;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +17,15 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.msf.movies.BuildConfig;
+import com.msf.movies.model.ReviewList;
+import com.msf.movies.model.VideoList;
+import com.msf.movies.viewmodel.MovieDetailViewModel;
+import com.msf.movies.R;
 import com.msf.movies.model.Movie;
 import com.msf.movies.util.MoviesApi;
 import com.msf.movies.util.RetrofitClientInstance;
+import com.msf.movies.viewmodel.MovieDetailViewModelFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -55,6 +65,7 @@ public class MovieDetailFragment extends Fragment {
     TextView mDescription;
 
     private CallBackDropImage mListener;
+    private MovieDetailViewModel movieDetailViewModel;
 
 
     public MovieDetailFragment() {
@@ -72,7 +83,7 @@ public class MovieDetailFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.movie_detail, container, false);
-        ButterKnife.bind(this,rootView);
+        ButterKnife.bind(this, rootView);
         if (mItem != null) {
             progressLoading.setVisibility(View.VISIBLE);
             relativeLayoutDetail.setVisibility(View.INVISIBLE);
@@ -92,11 +103,17 @@ public class MovieDetailFragment extends Fragment {
                     mErrorMessage.setVisibility(View.VISIBLE);
                 }
             });
+            MovieDetailViewModelFactory movieDetailViewModelFactory = new MovieDetailViewModelFactory(service.callListVideos(mItem.getId(), BuildConfig.API_KEY),
+                    service.callListReview(mItem.getId(), BuildConfig.API_KEY));
+            movieDetailViewModel = ViewModelProviders.of(this, movieDetailViewModelFactory).get(MovieDetailViewModel.class);
+            getVideos();
+            getReviews();
         } else {
             mErrorMessage.setVisibility(View.VISIBLE);
         }
         return rootView;
     }
+
 
     private void buildInterface(Movie movieResult) {
         mListener.onRequestBackdrop(movieResult.getBackDropImage());
@@ -130,6 +147,25 @@ public class MovieDetailFragment extends Fragment {
         movieDetailFragment.mListener = callBackDropImage;
         return movieDetailFragment;
     }
+
+    public void getVideos() {
+        movieDetailViewModel.getLiveDataVideos().observe(this, new Observer<VideoList>() {
+            @Override
+            public void onChanged(@Nullable VideoList videoList) {
+                Log.d("e","teste");
+            }
+        });
+    }
+
+    private void getReviews() {
+        movieDetailViewModel.getLiveDataReview().observe(this, new Observer<ReviewList>() {
+            @Override
+            public void onChanged(@Nullable ReviewList reviewList) {
+                Log.d("e","teste");
+            }
+        });
+    }
+
 
     public interface CallBackDropImage{
         void onRequestBackdrop(String backDropPath);

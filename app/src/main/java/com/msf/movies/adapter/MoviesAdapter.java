@@ -1,4 +1,4 @@
-package com.msf.movies;
+package com.msf.movies.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.msf.movies.R;
 import com.msf.movies.model.Movie;
 import com.msf.movies.util.NetworkEndPoints;
 import com.squareup.picasso.Picasso;

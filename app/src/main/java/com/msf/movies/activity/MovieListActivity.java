@@ -1,4 +1,4 @@
-package com.msf.movies;
+package com.msf.movies.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +22,9 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.msf.movies.BuildConfig;
+import com.msf.movies.adapter.MoviesAdapter;
+import com.msf.movies.R;
 import com.msf.movies.model.Movie;
 import com.msf.movies.model.MovieList;
 import com.msf.movies.util.ListItemDecoration;
@@ -34,7 +37,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MovieListActivity extends AppCompatActivity implements MoviesAdapter.MoviesOnClickListener{
+public class MovieListActivity extends AppCompatActivity implements MoviesAdapter.MoviesOnClickListener {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
