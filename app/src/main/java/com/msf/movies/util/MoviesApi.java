@@ -1,9 +1,7 @@
-package com.msf.moveis.util;
+package com.msf.movies.util;
 
-import com.msf.moveis.model.Movie;
-import com.msf.moveis.model.MovieList;
-
-import java.util.List;
+import com.msf.movies.model.Movie;
+import com.msf.movies.model.MovieList;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

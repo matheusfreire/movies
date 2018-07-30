@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".MovieListActivity">
+    tools:context="com.msf.movies.MovieListActivity">
     <item
         android:id="@+id/action_by_voted"
         android:orderInCategory="1"

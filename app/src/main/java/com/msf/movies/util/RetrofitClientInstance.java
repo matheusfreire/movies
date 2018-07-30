@@ -1,4 +1,4 @@
-package com.msf.moveis.util;
+package com.msf.movies.util;
 
 import android.support.annotation.NonNull;
 

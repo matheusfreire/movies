@@ -8,7 +8,7 @@
     <RelativeLayout android:id="@+id/relative_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MovieDetailFragment"
+        tools:context="com.msf.movies.MovieDetailFragment"
         android:background="@color/white">
 
         <LinearLayout android:id="@+id/movies_info"

@@ -1,6 +1,7 @@
-package com.msf.moveis;
+package com.msf.movies;
 
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -12,9 +13,9 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.msf.moveis.model.Movie;
-import com.msf.moveis.util.MoviesApi;
-import com.msf.moveis.util.RetrofitClientInstance;
+import com.msf.movies.model.Movie;
+import com.msf.movies.util.MoviesApi;
+import com.msf.movies.util.RetrofitClientInstance;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -76,7 +77,7 @@ public class MovieDetailFragment extends Fragment {
             progressLoading.setVisibility(View.VISIBLE);
             relativeLayoutDetail.setVisibility(View.INVISIBLE);
             MoviesApi service = RetrofitClientInstance.getRetrofitInstance().create(MoviesApi.class);
-            Call<Movie> call = service.callDetail(mItem.getId(),BuildConfig.Api);
+            Call<Movie> call = service.callDetail(mItem.getId(), BuildConfig.API_KEY);
             call.enqueue(new Callback<Movie>() {
                 @Override
                 public void onResponse(Call<Movie> call, Response<Movie> response) {
@@ -107,6 +108,7 @@ public class MovieDetailFragment extends Fragment {
         animateRatingbar(mRatebar);
     }
 
+    @SuppressLint("ObjectAnimatorBinding")
     private void animateRatingbar(RatingBar mRatebar) {
         float current = mRatebar.getRating();
         ObjectAnimator anim = ObjectAnimator.ofFloat(mRatebar, "mRating", 0, current);

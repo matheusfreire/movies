@@ -1,4 +1,4 @@
-package com.msf.moveis;
+package com.msf.movies;
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,11 +22,11 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.msf.moveis.model.Movie;
-import com.msf.moveis.model.MovieList;
-import com.msf.moveis.util.ListItemDecoration;
-import com.msf.moveis.util.MoviesApi;
-import com.msf.moveis.util.RetrofitClientInstance;
+import com.msf.movies.model.Movie;
+import com.msf.movies.model.MovieList;
+import com.msf.movies.util.ListItemDecoration;
+import com.msf.movies.util.MoviesApi;
+import com.msf.movies.util.RetrofitClientInstance;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -79,7 +79,7 @@ public class MovieListActivity extends AppCompatActivity implements MoviesAdapte
             // activity should be in two-pane mode.
             mTwoPane = true;
         }
-        getMovies(RetrofitClientInstance.getRetrofitInstance().create(MoviesApi.class).callListPopular(BuildConfig.Api));
+        getMovies(RetrofitClientInstance.getRetrofitInstance().create(MoviesApi.class).callListPopular(BuildConfig.API_KEY));
         buildRecycler();
     }
 
@@ -116,7 +116,7 @@ public class MovieListActivity extends AppCompatActivity implements MoviesAdapte
         mySnackbar.setAction(R.string.yes, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getMovies(RetrofitClientInstance.getRetrofitInstance().create(MoviesApi.class).callListPopular(BuildConfig.Api));
+                getMovies(RetrofitClientInstance.getRetrofitInstance().create(MoviesApi.class).callListPopular(BuildConfig.API_KEY));
             }
         });
         mySnackbar.show();
@@ -140,10 +140,10 @@ public class MovieListActivity extends AppCompatActivity implements MoviesAdapte
         int id = item.getItemId();
         switch (id){
             case R.id.action_popular:
-                getMovies(RetrofitClientInstance.getRetrofitInstance().create(MoviesApi.class).callListPopular(BuildConfig.Api));
+                getMovies(RetrofitClientInstance.getRetrofitInstance().create(MoviesApi.class).callListPopular(BuildConfig.API_KEY));
                 break;
             case R.id.action_by_voted:
-                getMovies(RetrofitClientInstance.getRetrofitInstance().create(MoviesApi.class).callListTopRated(BuildConfig.Api));
+                getMovies(RetrofitClientInstance.getRetrofitInstance().create(MoviesApi.class).callListTopRated(BuildConfig.API_KEY));
                 break;
         }
         return super.onOptionsItemSelected(item);

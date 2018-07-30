@@ -1,4 +1,4 @@
-package com.msf.moveis.model;
+package com.msf.movies.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

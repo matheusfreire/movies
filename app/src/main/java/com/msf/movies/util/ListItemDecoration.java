@@ -1,4 +1,4 @@
-package com.msf.moveis.util;
+package com.msf.movies.util;
 
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;

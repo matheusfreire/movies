@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.msf.moveis">
+    package="com.msf.movies">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SplashActivity">
+        <activity android:name="com.msf.movies.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,17 +20,20 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MovieListActivity"
+            android:name="com.msf.movies.MovieListActivity"
             android:label="@string/title_movie_list"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".MovieDetailActivity"
-            android:parentActivityName=".MovieListActivity"
+            android:name="com.msf.movies.MovieDetailActivity"
+            android:parentActivityName="com.msf.movies.MovieListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.msf.moveis.MovieListActivity" />
+                android:value="com.msf.movies.MovieListActivity" />
         </activity>
+        <activity
+            android:name="com.msf.movies.MainActivity"
+            android:label="@string/title_activity_main"/>
     </application>
 
 </manifest>

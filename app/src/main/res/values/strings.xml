@@ -10,4 +10,8 @@
     <string name="no_network">There is no network connection or service is offline</string>
     <string name="try_again">Try again?</string>
     <string name="yes">Yes</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 </resources>

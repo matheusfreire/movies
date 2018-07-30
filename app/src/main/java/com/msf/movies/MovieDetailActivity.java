@@ -1,6 +1,5 @@
-package com.msf.moveis;
+package com.msf.movies;
 
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -9,11 +8,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.Window;
 import android.widget.ImageView;
 
-import com.msf.moveis.model.Movie;
-import com.msf.moveis.util.NetworkEndPoints;
+import com.msf.movies.model.Movie;
+import com.msf.movies.util.NetworkEndPoints;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
