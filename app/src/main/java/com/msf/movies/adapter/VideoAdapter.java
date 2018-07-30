@@ -56,6 +56,7 @@ public class VideoAdapter extends ArrayAdapter {
         } else {
             videoHolder = (VideoViewHolder) convertView.getTag();
         }
+        videoHolder.mTitle.setTag(video);
         videoHolder.mTitle.setText(video.getName());
         return convertView;
     }
@@ -71,7 +72,7 @@ public class VideoAdapter extends ArrayAdapter {
 
         @Override
         public void onClick(View v) {
-
+            mClickListener.onClickVideo((Video) this.mTitle.getTag());
         }
     }
 }
