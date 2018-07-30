@@ -17,7 +17,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="15sp"
-        android:text="Mission: Impossible - Fallout (2018) - Official Trailer - Paramount Pictures"
         android:textColor="@android:color/black"
         android:layout_weight="2"
         android:layout_marginLeft="10dp"

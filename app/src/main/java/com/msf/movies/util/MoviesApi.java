@@ -23,10 +23,10 @@ public interface MoviesApi {
     @GET("movie/top_rated")
     Call<MovieList> callListTopRated(@Query("api_key") String apiKey);
 
-    @GET("/movie/{id}/videos")
+    @GET("movie/{id}/videos")
     Call<VideoList> callListVideos(@Path("id") long idMovie,@Query("api_key") String apiKey);
 
-    @GET("/movie/{id}/reviews")
+    @GET("movie/{id}/reviews")
     Call<ReviewList> callListReview(@Path("id") long idMovie,@Query("api_key") String apiKey);
 
 }

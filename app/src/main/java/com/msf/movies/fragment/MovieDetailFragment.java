@@ -8,17 +8,23 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.msf.movies.BuildConfig;
+import com.msf.movies.adapter.VideoAdapter;
 import com.msf.movies.model.ReviewList;
+import com.msf.movies.model.Video;
 import com.msf.movies.model.VideoList;
 import com.msf.movies.viewmodel.MovieDetailViewModel;
 import com.msf.movies.R;
@@ -32,11 +38,12 @@ import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MovieDetailFragment extends Fragment {
+public class MovieDetailFragment extends Fragment implements VideoAdapter.OnClickListenerVideo {
 
     private Movie mItem;
 
@@ -64,8 +71,17 @@ public class MovieDetailFragment extends Fragment {
     @BindView(R.id.txt_description)
     TextView mDescription;
 
+    @BindView(R.id.view_videos)
+    View includeVideo;
+
+    ListView mListViewVideo;
+
+    ImageView mImgArrowVideo;
+
     private CallBackDropImage mListener;
     private MovieDetailViewModel movieDetailViewModel;
+
+    private VideoAdapter mVideoAdapter;
 
 
     public MovieDetailFragment() {
@@ -85,6 +101,7 @@ public class MovieDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.movie_detail, container, false);
         ButterKnife.bind(this, rootView);
         if (mItem != null) {
+            findViewInsideLayout();
             progressLoading.setVisibility(View.VISIBLE);
             relativeLayoutDetail.setVisibility(View.INVISIBLE);
             MoviesApi service = RetrofitClientInstance.getRetrofitInstance().create(MoviesApi.class);
@@ -114,6 +131,10 @@ public class MovieDetailFragment extends Fragment {
         return rootView;
     }
 
+    private void findViewInsideLayout(){
+        mListViewVideo = includeVideo.findViewById(R.id.list_videos);
+        mImgArrowVideo = includeVideo.findViewById(R.id.img_arrow_down_video);
+    }
 
     private void buildInterface(Movie movieResult) {
         mListener.onRequestBackdrop(movieResult.getBackDropImage());
@@ -131,6 +152,17 @@ public class MovieDetailFragment extends Fragment {
         ObjectAnimator anim = ObjectAnimator.ofFloat(mRatebar, "mRating", 0, current);
         anim.setDuration(1800);
         anim.start();
+    }
+
+    @OnClick({R.id.view_videos})
+    public void onClick(View view){
+        int id = view.getId();
+        if(id == R.id.view_videos){
+            mListViewVideo.setVisibility(mListViewVideo.isShown() ?  View.GONE: View.VISIBLE);
+            mImgArrowVideo.setBackground(mListViewVideo.isShown() ? this.getContext().getDrawable(R.drawable.ic_arrow_up): this.getContext().getDrawable(R.drawable.ic_arrow_down));
+        } else if(id == R.id.card_view_reviews){
+
+        }
     }
 
     private float getVoteAverage(Movie movieResult) {
@@ -152,7 +184,9 @@ public class MovieDetailFragment extends Fragment {
         movieDetailViewModel.getLiveDataVideos().observe(this, new Observer<VideoList>() {
             @Override
             public void onChanged(@Nullable VideoList videoList) {
-                Log.d("e","teste");
+                mVideoAdapter = new VideoAdapter(getActivity(), R.layout.video, videoList.getVideos(), MovieDetailFragment.this);
+                mListViewVideo.setAdapter(mVideoAdapter);
+                mVideoAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -164,6 +198,11 @@ public class MovieDetailFragment extends Fragment {
                 Log.d("e","teste");
             }
         });
+    }
+
+    @Override
+    public void onClickVideo(Video video) {
+
     }
 
 

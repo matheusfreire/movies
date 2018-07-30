@@ -33,6 +33,11 @@ public class VideoAdapter extends ArrayAdapter {
         this.mLayout = layout;
     }
 
+    @Override
+    public int getCount() {
+        return mVideos.size();
+    }
+
     @Nullable
     @Override
     public Video getItem(int position) {
@@ -44,9 +49,9 @@ public class VideoAdapter extends ArrayAdapter {
         Video video = getItem(position);
         VideoViewHolder videoHolder;
         if (convertView == null) {
-            videoHolder = new VideoViewHolder(convertView);
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(mLayout, parent, false);
+            videoHolder = new VideoViewHolder(convertView);
             convertView.setTag(videoHolder);
         } else {
             videoHolder = (VideoViewHolder) convertView.getTag();
