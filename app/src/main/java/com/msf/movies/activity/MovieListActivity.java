@@ -155,7 +155,7 @@ public class MovieListActivity extends AppCompatActivity implements MoviesAdapte
     private void buildRecycler() {
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, NUM_COLUMNS);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.addItemDecoration(new ListItemDecoration(2, dpToPx(10)));
+        mRecyclerView.addItemDecoration(new ListItemDecoration(NUM_COLUMNS, dpToPx(10)));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setHasFixedSize(true);
     }

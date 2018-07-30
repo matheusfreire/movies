@@ -5,17 +5,15 @@ import android.annotation.SuppressLint;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -24,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.msf.movies.BuildConfig;
+import com.msf.movies.adapter.ReviewAdapter;
 import com.msf.movies.adapter.VideoAdapter;
 import com.msf.movies.model.ReviewList;
 import com.msf.movies.model.Video;
@@ -47,6 +46,8 @@ import retrofit2.Response;
 
 public class MovieDetailFragment extends Fragment implements VideoAdapter.OnClickListenerVideo {
 
+    public static final String KEY_MOVIE = "movie";
+    public static final String PATTER_DATE_BR = "dd/MM/yyyy";
     private Movie mItem;
 
     @BindView(R.id.progress_loading)
@@ -76,15 +77,23 @@ public class MovieDetailFragment extends Fragment implements VideoAdapter.OnClic
     @BindView(R.id.view_videos)
     View includeVideo;
 
-    ListView mListViewVideo;
+    @BindView(R.id.view_reviews)
+    View includeReview;
 
-    ImageView mImgArrowVideo;
+    private ListView mListViewVideo;
+
+    private ListView mListViewReview;
+
+    private ImageView mImgArrowVideo;
+
+    private ImageView mImgArrowReview;
 
     private CallBackDropImage mListener;
     private MovieDetailViewModel movieDetailViewModel;
 
     private VideoAdapter mVideoAdapter;
 
+    private ReviewAdapter mReviewAdapter;
 
     public MovieDetailFragment() {
     }
@@ -93,8 +102,8 @@ public class MovieDetailFragment extends Fragment implements VideoAdapter.OnClic
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments() != null && getArguments().containsKey("movie")) {
-            mItem = getArguments().getParcelable("movie");
+        if (getArguments() != null && getArguments().containsKey(KEY_MOVIE)) {
+            mItem = getArguments().getParcelable(KEY_MOVIE);
         }
     }
 
@@ -133,9 +142,11 @@ public class MovieDetailFragment extends Fragment implements VideoAdapter.OnClic
         return rootView;
     }
 
-    private void findViewInsideLayout(){
+    private void findViewInsideLayout() {
         mListViewVideo = includeVideo.findViewById(R.id.list_videos);
         mImgArrowVideo = includeVideo.findViewById(R.id.img_arrow_down_video);
+        mListViewReview = includeReview.findViewById(R.id.list_review);
+        mImgArrowReview = includeReview.findViewById(R.id.img_arrow_down_review);
     }
 
     private void buildInterface(Movie movieResult) {
@@ -151,28 +162,37 @@ public class MovieDetailFragment extends Fragment implements VideoAdapter.OnClic
     @SuppressLint("ObjectAnimatorBinding")
     private void animateRatingbar(RatingBar mRatebar) {
         float current = mRatebar.getRating();
-        ObjectAnimator anim = ObjectAnimator.ofFloat(mRatebar, "mRating", 0, current);
+        ObjectAnimator anim = ObjectAnimator.ofFloat(mRatebar, "mRatebar", 0, current);
         anim.setDuration(1800);
         anim.start();
     }
 
-    @OnClick({R.id.view_videos})
-    public void onClick(View view){
+    @OnClick({R.id.view_videos, R.id.view_reviews})
+    public void onClick(View view) {
         int id = view.getId();
-        if(id == R.id.view_videos){
-            mListViewVideo.setVisibility(mListViewVideo.isShown() ?  View.GONE: View.VISIBLE);
-            mImgArrowVideo.setBackground(mListViewVideo.isShown() ? this.getContext().getDrawable(R.drawable.ic_arrow_up): this.getContext().getDrawable(R.drawable.ic_arrow_down));
-        } else if(id == R.id.card_view_reviews){
-
+        if (id == R.id.view_videos) {
+            mListViewVideo.setVisibility(getVisibility(mListViewVideo.isShown()));
+            mImgArrowVideo.setBackground(getBackground(mListViewVideo.isShown()));
+        } else if (id == R.id.view_reviews) {
+            mListViewReview.setVisibility(getVisibility(mListViewReview.isShown()));
+            mImgArrowReview.setBackground(getBackground(mListViewReview.isShown()));
         }
     }
 
+    private int getVisibility(boolean shown) {
+        return shown ? View.GONE : View.VISIBLE;
+    }
+
+    private Drawable getBackground(boolean isShowList) {
+        return isShowList ? this.getContext().getDrawable(R.drawable.ic_arrow_up) : this.getContext().getDrawable(R.drawable.ic_arrow_down);
+    }
+
     private float getVoteAverage(Movie movieResult) {
-        return (float) movieResult.getVoteAverage()/2;
+        return (float) movieResult.getVoteAverage() / 2;
     }
 
     private String getDateReleased(Date releaseDate) {
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat df = new SimpleDateFormat(PATTER_DATE_BR);
         return df.format(releaseDate);
     }
 
@@ -186,9 +206,8 @@ public class MovieDetailFragment extends Fragment implements VideoAdapter.OnClic
         movieDetailViewModel.getLiveDataVideos().observe(this, new Observer<VideoList>() {
             @Override
             public void onChanged(@Nullable VideoList videoList) {
-                mVideoAdapter = new VideoAdapter(getActivity(), R.layout.video, videoList.getVideos(), MovieDetailFragment.this);
+                mVideoAdapter = new VideoAdapter(getContext(), R.layout.video, videoList.getVideos(), MovieDetailFragment.this);
                 mListViewVideo.setAdapter(mVideoAdapter);
-                mVideoAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -197,7 +216,8 @@ public class MovieDetailFragment extends Fragment implements VideoAdapter.OnClic
         movieDetailViewModel.getLiveDataReview().observe(this, new Observer<ReviewList>() {
             @Override
             public void onChanged(@Nullable ReviewList reviewList) {
-                Log.d("e","teste");
+                mReviewAdapter = new ReviewAdapter(getContext(), R.layout.review, reviewList.getReviews());
+                mListViewReview.setAdapter(mReviewAdapter);
             }
         });
     }
@@ -206,14 +226,14 @@ public class MovieDetailFragment extends Fragment implements VideoAdapter.OnClic
     public void onClickVideo(Video video) {
         String urlVideo = "http://www.youtube.com/watch?v=" + video.getKey();
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlVideo));
-        Intent chooser = Intent.createChooser(intent , "Open With");
+        Intent chooser = Intent.createChooser(intent, "Open With");
         if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivity(chooser);
         }
     }
 
 
-    public interface CallBackDropImage{
+    public interface CallBackDropImage {
         void onRequestBackdrop(String backDropPath);
     }
 }

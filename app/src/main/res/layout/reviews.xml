@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view_reviews"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -19,30 +19,36 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/textView_name"
-                android:textSize="18sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:text="@string/reviews"
+                android:layout_alignParentStart="true"
                 android:layout_centerInParent="true"
-                android:layout_alignParentStart="true"/>
+                android:text="@string/reviews"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <RelativeLayout
-                android:id="@+id/button"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_gravity="end"
                 android:layout_alignParentEnd="true"
+                android:layout_gravity="end"
                 android:gravity="center">
 
-                <ImageView
+                <ImageView android:id="@+id/img_arrow_down_review"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:background="@drawable/ic_arrow_down"
-                    android:layout_alignParentEnd="false" />
+                    android:layout_alignParentEnd="false"
+                    android:background="@drawable/ic_arrow_down" />
             </RelativeLayout>
         </RelativeLayout>
+
+        <ListView
+            android:id="@+id/list_review"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:dividerHeight="3dp"
+            tools:listitem="@layout/review"
+            android:visibility="gone"/>
 
     </LinearLayout>
 
