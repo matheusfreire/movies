@@ -204,10 +204,12 @@ public class MovieDetailFragment extends Fragment implements VideoAdapter.OnClic
 
     @Override
     public void onClickVideo(Video video) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse("http://www.youtube.com/watch?v=" + video.getKey()));
-        intent.setPackage("com.google.android.youtube");
-        startActivity(intent);
+        String urlVideo = "http://www.youtube.com/watch?v=" + video.getKey();
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlVideo));
+        Intent chooser = Intent.createChooser(intent , "Open With");
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivity(chooser);
+        }
     }
 
 
