@@ -27,6 +27,10 @@ import butterknife.ButterKnife;
  * in a {@link MovieListActivity}.
  */
 public class MovieDetailActivity extends AppCompatActivity implements MovieDetailFragment.CallBackDropImage {
+    public static final String KEY_TITULO = "titulo";
+    public static final String KEY_TITLE_MOVIE = "titleMovie";
+    public static final String KEY_POSTER = "poster";
+    public static final String KEY_MOVIE = "movie";
     @BindView(R.id.toolbar_detail)
     CollapsingToolbarLayout appBarLayout;
 
@@ -35,6 +39,8 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
     @BindView(R.id.poster)
     ImageView poster;
+
+    private String backImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,13 +69,13 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
             Bundle extras = getIntent().getExtras();
             Movie movie = null;
             if (extras != null) {
-                movie = extras.getParcelable("movie");
+                movie = extras.getParcelable(KEY_MOVIE);
             }
-            arguments.putParcelable("movie", movie);
+            arguments.putParcelable(KEY_MOVIE, movie);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 if (appBarLayout != null) {
-                    ViewCompat.setTransitionName(appBarLayout, "titleMovie");
-                    ViewCompat.setTransitionName(poster,"poster");
+                    ViewCompat.setTransitionName(appBarLayout, KEY_TITLE_MOVIE);
+                    ViewCompat.setTransitionName(poster, KEY_POSTER);
                     if (movie != null) {
                         appBarLayout.setTitle(movie.getTitle());
                     }
@@ -92,7 +98,22 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString(KEY_TITULO, appBarLayout.getTitle().toString());
+        outState.putString(KEY_POSTER,backImage);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        appBarLayout.setTitle(savedInstanceState.getString(KEY_TITULO));
+        onRequestBackdrop(savedInstanceState.getString(KEY_POSTER));
+    }
+
+    @Override
     public void onRequestBackdrop(String backDropPath) {
+        backImage =  backDropPath;
         Picasso.get()
                 .load(NetworkEndPoints.IMAGE_API.getUrl() + backDropPath)
                 .into(poster, new Callback() {

@@ -136,6 +136,7 @@ public class MovieDetailFragment extends Fragment implements VideoAdapter.OnClic
             movieDetailViewModel = ViewModelProviders.of(this, movieDetailViewModelFactory).get(MovieDetailViewModel.class);
             getVideos();
             getReviews();
+            setRetainInstance(true);
         } else {
             mErrorMessage.setVisibility(View.VISIBLE);
         }

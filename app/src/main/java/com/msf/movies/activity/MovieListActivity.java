@@ -39,6 +39,7 @@ import retrofit2.Response;
 
 public class MovieListActivity extends AppCompatActivity implements MoviesAdapter.MoviesOnClickListener {
 
+    public static final String KEY_ADAPTER = "adapter";
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
@@ -180,5 +181,17 @@ public class MovieListActivity extends AppCompatActivity implements MoviesAdapte
         ActivityOptionsCompat options = ActivityOptionsCompat.
                 makeSceneTransitionAnimation(this, Pair.create(views[0], "poster"),Pair.create(views[1], "titleMovie"));
         startActivity(intent, options.toBundle());
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(KEY_ADAPTER,mMoviesAdapter);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mMoviesAdapter = savedInstanceState.getParcelable(KEY_ADAPTER);
     }
 }
