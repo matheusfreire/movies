@@ -185,7 +185,6 @@ public class MovieListActivity extends AppCompatActivity implements MoviesAdapte
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(KEY_ADAPTER,mMoviesAdapter);
         super.onSaveInstanceState(outState);
     }
 

@@ -7,6 +7,9 @@ import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
@@ -27,10 +30,13 @@ import butterknife.ButterKnife;
  * in a {@link MovieListActivity}.
  */
 public class MovieDetailActivity extends AppCompatActivity implements MovieDetailFragment.CallBackDropImage {
-    public static final String KEY_TITULO = "titulo";
-    public static final String KEY_TITLE_MOVIE = "titleMovie";
-    public static final String KEY_POSTER = "poster";
-    public static final String KEY_MOVIE = "movie";
+    private static final String KEY_TITULO = "titulo";
+    private static final String KEY_TITLE_MOVIE = "titleMovie";
+    private static final String KEY_POSTER = "poster";
+    private static final String KEY_MOVIE = "movie";
+
+    private Movie movie;
+
     @BindView(R.id.toolbar_detail)
     CollapsingToolbarLayout appBarLayout;
 
@@ -67,7 +73,6 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         if (savedInstanceState == null) {
             Bundle arguments = new Bundle();
             Bundle extras = getIntent().getExtras();
-            Movie movie = null;
             if (extras != null) {
                 movie = extras.getParcelable(KEY_MOVIE);
             }
@@ -88,11 +93,20 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_detail, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
             supportFinishAfterTransition();
             return true;
+        } else if(id == R.id.action_favorite_movie){
+            item.setIcon(this.getDrawable(R.drawable.ic_star_fill));
         }
         return super.onOptionsItemSelected(item);
     }
@@ -101,6 +115,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     protected void onSaveInstanceState(Bundle outState) {
         outState.putString(KEY_TITULO, appBarLayout.getTitle().toString());
         outState.putString(KEY_POSTER,backImage);
+        outState.putParcelable(KEY_MOVIE, movie);
         super.onSaveInstanceState(outState);
     }
 
@@ -109,6 +124,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         super.onRestoreInstanceState(savedInstanceState);
         appBarLayout.setTitle(savedInstanceState.getString(KEY_TITULO));
         onRequestBackdrop(savedInstanceState.getString(KEY_POSTER));
+        movie = savedInstanceState.getParcelable(KEY_MOVIE);
     }
 
     @Override
