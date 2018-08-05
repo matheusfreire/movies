@@ -17,7 +17,7 @@ public class SplashActivity extends Activity {
         final Runnable r = new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(SplashActivity.this,MovieListActivity.class);
+                Intent intent = new Intent(SplashActivity.this,MainActivity.class);
                 startActivity(intent);
             }
         };

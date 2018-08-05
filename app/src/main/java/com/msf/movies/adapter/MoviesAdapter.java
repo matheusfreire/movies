@@ -35,6 +35,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         this.mListener = onClickListener;
     }
 
+    public MoviesAdapter(List<Movie> movies,MoviesOnClickListener listener){
+        this.mListMovies = movies;
+        this.mListener = listener;
+        this.mTotal = movies.size();
+    }
+
     @NonNull
     @Override
     public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

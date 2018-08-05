@@ -1,6 +1,7 @@
 package com.msf.movies.dao;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -21,9 +22,6 @@ public interface MovieDao {
 
     @Insert
     void insertFavMovie(Movie movie);
-
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    void updateMovie(Movie movie);
 
     @Delete
     void deleteMovie(Movie movie);

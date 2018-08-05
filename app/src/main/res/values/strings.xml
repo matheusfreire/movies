@@ -12,11 +12,15 @@
     <string name="yes">Yes</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
+    <string name="title_fav_movies">Favorites Movies</string>
     <string name="title_notifications">Notifications</string>
     <string name="reviews">Reviews</string>
     <string name="videos">Videos</string>
     <string name="movie">Movie</string>
     <string name="youtube_tm">youtube logo</string>
     <string name="favorite">favorite</string>
+    <string name="title_dashboard">Dashboard</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

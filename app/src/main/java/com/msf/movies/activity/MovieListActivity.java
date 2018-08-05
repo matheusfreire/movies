@@ -1,19 +1,20 @@
 package com.msf.movies.activity;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -32,21 +33,18 @@ import com.msf.movies.model.MovieList;
 import com.msf.movies.util.ListItemDecoration;
 import com.msf.movies.util.MoviesApi;
 import com.msf.movies.util.RetrofitClientInstance;
+import com.msf.movies.viewmodel.MovieListViewModel;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MovieListActivity extends AppCompatActivity implements MoviesAdapter.MoviesOnClickListener {
 
     public static final String KEY_ADAPTER = "adapter";
-    /**
-     * Whether or not the activity is in two-pane mode, i.e. running on a tablet
-     * device.
-     */
-    private boolean mTwoPane;
+    public static final String KEY_TYPE = "type";
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -66,8 +64,11 @@ public class MovieListActivity extends AppCompatActivity implements MoviesAdapte
 
     private MoviesAdapter mMoviesAdapter;
 
-    private boolean landOrientation;
     private static final int NUM_COLUMNS = 2;
+
+    private MovieListViewModel mMovieListViewModel;
+
+    private String typeMovies;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,38 +79,59 @@ public class MovieListActivity extends AppCompatActivity implements MoviesAdapte
         setSupportActionBar(mToolbar);
         mToolbar.setTitle(R.string.app_name);
 
-
-        if (findViewById(R.id.movie_detail_container) != null) {
-            // The detail container view will be present only in the
-            // large-screen layouts (res/values-w900dp).
-            // If this view is present, then the
-            // activity should be in two-pane mode.
-            mTwoPane = true;
+        mMovieListViewModel = ViewModelProviders.of(this).get(MovieListViewModel.class);
+        observerFromViewModel();
+        if(savedInstanceState != null){
+            typeMovies = savedInstanceState.getString(KEY_TYPE, "");
+            switch (typeMovies){
+                case "voted":
+                    getMovies(RetrofitClientInstance.getRetrofitInstance().create(MoviesApi.class).callListTopRated(BuildConfig.API_KEY));
+                    break;
+                case "fav":
+                    mMovieListViewModel.getFavMovies();
+                    break;
+                default:
+                    getMovies(RetrofitClientInstance.getRetrofitInstance().create(MoviesApi.class).callListPopular(BuildConfig.API_KEY));
+                    break;
+            }
+        } else {
+            getMovies(RetrofitClientInstance.getRetrofitInstance().create(MoviesApi.class).callListPopular(BuildConfig.API_KEY));
         }
-        getMovies(RetrofitClientInstance.getRetrofitInstance().create(MoviesApi.class).callListPopular(BuildConfig.API_KEY));
-        buildRecycler(landOrientation);
+        buildRecycler();
+    }
+
+    private void observerFromViewModel() {
+        mMovieListViewModel.getMultableLiveDataListMovie().observe(this, new Observer<List<Movie>>() {
+            @Override
+            public void onChanged(@Nullable List<Movie> movies) {
+                mountRecyclerWithList(movies);
+            }
+        });
+        mMovieListViewModel.getLiveDataMovies().observe(this, new Observer<List<Movie>>() {
+            @Override
+            public void onChanged(@Nullable List<Movie> movies) {
+                mountRecyclerWithList(movies);
+            }
+        });
+    }
+
+    private void mountRecyclerWithList(@Nullable List<Movie> movies) {
+        if(movies != null){
+            mMoviesAdapter = new MoviesAdapter(movies.size(), movies, MovieListActivity.this);
+            setAdapterToRecycler(mRecyclerView);
+            mProgressLoading.setVisibility(View.INVISIBLE);
+            showRecyclerView(true);
+        } else {
+            mProgressLoading.setVisibility(View.INVISIBLE);
+            showRecyclerView(false);
+        }
     }
 
     private void getMovies(Call<MovieList> request) {
         if(isOnline()){
             mProgressLoading.setVisibility(View.VISIBLE);
             mRecyclerView.setAdapter(null);
-            request.enqueue(new Callback<MovieList>() {
-                @Override
-                public void onResponse(Call<MovieList> call, Response<MovieList> response) {
-                    mMoviesAdapter = new MoviesAdapter(response.body().getResults().size(), response.body().getResults(), MovieListActivity.this);
-                    setAdapterToRecycler(mRecyclerView);
-                    mProgressLoading.setVisibility(View.INVISIBLE);
-                    showRecyclerView(true);
-                }
-
-                @Override
-                public void onFailure(Call<MovieList> call, Throwable t) {
-                    mProgressLoading.setVisibility(View.INVISIBLE);
-                    showRecyclerView(false);
-                }
-
-            });
+            mMovieListViewModel.getMovies(request);
         } else {
             buidlNetworkMessage();
         }
@@ -148,21 +170,43 @@ public class MovieListActivity extends AppCompatActivity implements MoviesAdapte
         switch (id){
             case R.id.action_popular:
                 getMovies(RetrofitClientInstance.getRetrofitInstance().create(MoviesApi.class).callListPopular(BuildConfig.API_KEY));
+                setTypeMovies("popular");
+                updateTitleToolbar(getString(R.string.movies_popular));
                 break;
             case R.id.action_by_voted:
                 getMovies(RetrofitClientInstance.getRetrofitInstance().create(MoviesApi.class).callListTopRated(BuildConfig.API_KEY));
+                setTypeMovies("voted");
+                updateTitleToolbar(getString(R.string.movies_more_voted));
+                break;
+            case R.id.action_favorites_movie:
+                getFavoritesMovie();
+                setTypeMovies("fav");
+                updateTitleToolbar(getString(R.string.title_fav_movies));
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void buildRecycler(boolean landOrientation) {
-        RecyclerView.LayoutManager mLayoutManager;
-        if(landOrientation){
-            mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+    private void updateTitleToolbar(String title){
+        mToolbar.setTitle(title);
+    }
+
+    public void setTypeMovies(String typeMovies) {
+        this.typeMovies = typeMovies;
+    }
+
+    private void getFavoritesMovie() {
+        if(isOnline()){
+            mProgressLoading.setVisibility(View.VISIBLE);
+            mRecyclerView.setAdapter(null);
+            mMovieListViewModel.getFavMovies();
         } else {
-            mLayoutManager = new GridLayoutManager(this, NUM_COLUMNS);
+            buidlNetworkMessage();
         }
+    }
+
+    private void buildRecycler() {
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, NUM_COLUMNS);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.addItemDecoration(new ListItemDecoration(NUM_COLUMNS, dpToPx(10)));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -192,8 +236,14 @@ public class MovieListActivity extends AppCompatActivity implements MoviesAdapte
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        landOrientation = newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE;
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString(KEY_TYPE, typeMovies);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        typeMovies = savedInstanceState.getString(KEY_TYPE, "");
     }
 }
