@@ -1,5 +1,9 @@
 package com.msf.movies.model;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -11,9 +15,11 @@ import java.util.List;
 import lombok.Data;
 
 @Data
+@Entity(tableName = "movies")
 public class Movie implements Parcelable {
 
     @SerializedName("id")
+    @PrimaryKey
     private long id;
 
     @SerializedName("title")
@@ -31,9 +37,6 @@ public class Movie implements Parcelable {
     @SerializedName("poster_path")
     private String poster;
 
-    @SerializedName("genres")
-    private List<Genre> genres;
-
     @SerializedName("tagline")
     private String tagLine;
 
@@ -43,6 +46,22 @@ public class Movie implements Parcelable {
     @SerializedName("backdrop_path")
     private String backDropImage;
 
+    @Ignore
+    private boolean favorited;
+
+    public Movie(long id, String title, String originalTitle, String overview, double voteAverage, String poster, String tagLine, Date releaseDate, String backDropImage) {
+        this.id = id;
+        this.title = title;
+        this.originalTitle = originalTitle;
+        this.overview = overview;
+        this.voteAverage = voteAverage;
+        this.poster = poster;
+        this.tagLine = tagLine;
+        this.releaseDate = releaseDate;
+        this.backDropImage = backDropImage;
+    }
+
+    @Ignore
     protected Movie(Parcel in) {
         id = in.readLong();
         title = in.readString();

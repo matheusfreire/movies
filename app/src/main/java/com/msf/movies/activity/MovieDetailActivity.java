@@ -1,21 +1,25 @@
 package com.msf.movies.activity;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
+import com.msf.movies.db.MovieDatabase;
 import com.msf.movies.fragment.MovieDetailFragment;
 import com.msf.movies.R;
 import com.msf.movies.model.Movie;
+import com.msf.movies.util.AppExecutor;
 import com.msf.movies.util.NetworkEndPoints;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -48,6 +52,10 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
     private String backImage;
 
+    private MovieDatabase database;
+
+    private MenuItem menuItem;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,15 +69,6 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        // savedInstanceState is non-null when there is fragment state
-        // saved from previous configurations of this activity
-        // (e.g. when rotating the screen from portrait to landscape).
-        // In this case, the fragment will automatically be re-added
-        // to its container so we don't need to manually add it.
-        // For more information, see the Fragments API guide at:
-        //
-        // http://developer.android.com/guide/components/fragments.html
-        //
         if (savedInstanceState == null) {
             Bundle arguments = new Bundle();
             Bundle extras = getIntent().getExtras();
@@ -92,23 +91,65 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         }
     }
 
+    private void getMovieFromDb() {
+        database = MovieDatabase.getInstance(this);
+        LiveData<Movie> liveDataMovieSaved = database.movieDao().loadMovieById(movie.getId());
+        liveDataMovieSaved.observe(this, new Observer<Movie>() {
+            @Override
+            public void onChanged(@Nullable Movie movie) {
+                if(movie != null){
+                    MovieDetailActivity.this.movie.setFavorited(true);
+                    hasFavMovie(true);
+                }
+            }
+        });
+    }
+
+    private void hasFavMovie(boolean yes){
+        menuItem.setIcon(getDrawable(yes ?  R.drawable.ic_star_fill: R.drawable.ic_star_outline));
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_detail, menu);
+        menuItem = menu.findItem(R.id.action_favorite_movie);
+        getMovieFromDb();
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
             supportFinishAfterTransition();
             return true;
         } else if(id == R.id.action_favorite_movie){
-            item.setIcon(this.getDrawable(R.drawable.ic_star_fill));
+            AppExecutor.getInstance().getDbIo().execute(new Runnable() {
+                @Override
+                public void run() {
+                    if(movie.isFavorited()){
+                        database.movieDao().deleteMovie(movie);
+                        callChangeIconOnUiThred(false);
+                        movie.setFavorited(false);
+                    } else {
+                        database.movieDao().insertFavMovie(movie);
+                        callChangeIconOnUiThred(true);
+                        movie.setFavorited(true);
+                    }
+                }
+            });
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void callChangeIconOnUiThred(final boolean favMovie){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                hasFavMovie(favMovie);
+            }
+        });
     }
 
     @Override
