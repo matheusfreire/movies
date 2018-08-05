@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_margin="5dp"
+    android:background="@color/white"
+    android:elevation="@dimen/elevation_card"
+    card_view:cardCornerRadius="@dimen/radius_card">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/thumbnail"
+                android:layout_width="150dp"
+                android:layout_height="140dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/thumbnail"
+                android:scaleType="fitXY"
+                android:transitionName="poster" />
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/thumbnail"
+                android:ellipsize="end"
+                android:gravity="start"
+                android:maxLines="1"
+                android:paddingLeft="@dimen/paddin_left_txt_view"
+                android:paddingRight="@dimen/paddin_right_txt_view"
+                android:paddingTop="@dimen/paddin_top_txt_view"
+                tools:text="@string/app_name"
+                android:textColor="@color/gray"
+                android:textSize="15sp"
+                android:transitionName="titleMovie" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title"
+                android:orientation="horizontal"
+                android:layout_toEndOf="@+id/thumbnail"
+                android:paddingBottom="@dimen/padding_5dp"
+                android:paddingTop="@dimen/padding_5dp"
+                android:paddingRight="@dimen/padding_15dp">
+
+                <ImageView
+                    android:id="@+id/img_rating"
+                    android:layout_width="@dimen/size_img_txt"
+                    android:layout_height="@dimen/size_img_txt"
+                    android:clickable="true"
+                    android:contentDescription="@string/rating"
+                    android:focusable="true"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_star" />
+
+                <TextView
+                    android:id="@+id/rating"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/txt_view_rating_bottom_padding"
+                    android:paddingLeft="@dimen/txt_view_rating_left_padding"
+                    android:paddingRight="@dimen/txt_view_rating_right_padding"
+                    android:text="@string/app_name"
+                    android:textSize="12sp"
+                    tools:text="@string/rating"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+</android.support.v7.widget.CardView>

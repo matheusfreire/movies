@@ -2,6 +2,7 @@ package com.msf.movies.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -64,6 +66,7 @@ public class MovieListActivity extends AppCompatActivity implements MoviesAdapte
 
     private MoviesAdapter mMoviesAdapter;
 
+    private boolean landOrientation;
     private static final int NUM_COLUMNS = 2;
 
     @Override
@@ -84,7 +87,7 @@ public class MovieListActivity extends AppCompatActivity implements MoviesAdapte
             mTwoPane = true;
         }
         getMovies(RetrofitClientInstance.getRetrofitInstance().create(MoviesApi.class).callListPopular(BuildConfig.API_KEY));
-        buildRecycler();
+        buildRecycler(landOrientation);
     }
 
     private void getMovies(Call<MovieList> request) {
@@ -95,7 +98,7 @@ public class MovieListActivity extends AppCompatActivity implements MoviesAdapte
                 @Override
                 public void onResponse(Call<MovieList> call, Response<MovieList> response) {
                     mMoviesAdapter = new MoviesAdapter(response.body().getResults().size(), response.body().getResults(), MovieListActivity.this);
-                    setupRecyclerView(mRecyclerView);
+                    setAdapterToRecycler(mRecyclerView);
                     mProgressLoading.setVisibility(View.INVISIBLE);
                     showRecyclerView(true);
                 }
@@ -153,8 +156,13 @@ public class MovieListActivity extends AppCompatActivity implements MoviesAdapte
         return super.onOptionsItemSelected(item);
     }
 
-    private void buildRecycler() {
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, NUM_COLUMNS);
+    private void buildRecycler(boolean landOrientation) {
+        RecyclerView.LayoutManager mLayoutManager;
+        if(landOrientation){
+            mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        } else {
+            mLayoutManager = new GridLayoutManager(this, NUM_COLUMNS);
+        }
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.addItemDecoration(new ListItemDecoration(NUM_COLUMNS, dpToPx(10)));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -166,7 +174,7 @@ public class MovieListActivity extends AppCompatActivity implements MoviesAdapte
         mRecyclerView.setVisibility(showRecyclerView ? View.VISIBLE : View.INVISIBLE);
     }
 
-    private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
+    private void setAdapterToRecycler(@NonNull RecyclerView recyclerView) {
         recyclerView.setAdapter(mMoviesAdapter);
     }
 
@@ -184,13 +192,8 @@ public class MovieListActivity extends AppCompatActivity implements MoviesAdapte
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        mMoviesAdapter = savedInstanceState.getParcelable(KEY_ADAPTER);
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        landOrientation = newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 }

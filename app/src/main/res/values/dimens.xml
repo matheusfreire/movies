@@ -7,4 +7,15 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="radius_card">3dp</dimen>
+    <dimen name="elevation_card">3dp</dimen>
+    <dimen name="paddin_left_txt_view">5dp</dimen>
+    <dimen name="paddin_right_txt_view">5dp</dimen>
+    <dimen name="paddin_top_txt_view">15dp</dimen>
+    <dimen name="size_img_txt">20dp</dimen>
+    <dimen name="txt_view_rating_left_padding">3dp</dimen>
+    <dimen name="txt_view_rating_right_padding">3dp</dimen>
+    <dimen name="txt_view_rating_bottom_padding">5dp</dimen>
+    <dimen name="padding_5dp">5dp</dimen>
+    <dimen name="padding_15dp">15dp</dimen>
 </resources>
