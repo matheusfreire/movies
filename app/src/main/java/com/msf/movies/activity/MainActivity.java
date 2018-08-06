@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         mMovieListViewModel = ViewModelProviders.of(this).get(MovieListViewModel.class);
+        replaceWithFragment(1);
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener

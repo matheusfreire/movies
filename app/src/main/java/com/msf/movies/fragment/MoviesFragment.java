@@ -19,7 +19,6 @@ import android.widget.TextView;
 import com.msf.movies.BuildConfig;
 import com.msf.movies.R;
 import com.msf.movies.activity.MainActivity;
-import com.msf.movies.activity.MovieListActivity;
 import com.msf.movies.adapter.MoviesAdapter;
 import com.msf.movies.model.Movie;
 import com.msf.movies.util.ListItemDecoration;
@@ -31,7 +30,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import lombok.Setter;
 
 public class MoviesFragment extends Fragment {
 
@@ -74,23 +72,37 @@ public class MoviesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_movie_list, container, false);
         ButterKnife.bind(this, rootView);
+        mProgressLoading.setVisibility(View.VISIBLE);
+        mRecyclerView.setVisibility(View.INVISIBLE);
         switch (movieType){
             case MOVIE_POPULAR:
-                movieListViewModel.getMovies(RetrofitClientInstance.getRetrofitInstance().create(MoviesApi.class).callListPopular(BuildConfig.API_KEY));
-                observerMultableLiveData();
+                if(((MainActivity )getActivity()).isOnline()){
+                    movieListViewModel.getMovies(RetrofitClientInstance.getRetrofitInstance().create(MoviesApi.class).callListPopular(BuildConfig.API_KEY));
+                    observerMultableLiveData();
+                } else {
+                    buildNetworkMessage();
+                }
                 break;
             case MOVIE_MORE_VOTED:
-                movieListViewModel.getMovies(RetrofitClientInstance.getRetrofitInstance().create(MoviesApi.class).callListTopRated(BuildConfig.API_KEY));
-                observerMultableLiveData();
+                if(((MainActivity )getActivity()).isOnline()){
+                    movieListViewModel.getMovies(RetrofitClientInstance.getRetrofitInstance().create(MoviesApi.class).callListTopRated(BuildConfig.API_KEY));
+                    observerMultableLiveData();
+                } else {
+                    buildNetworkMessage();
+                }
                 break;
             case FAVORITES_MOVIES:
-                movieListViewModel.getFavMovies();
-                movieListViewModel.getLiveDataMovies().observe(this, new Observer<List<Movie>>() {
-                    @Override
-                    public void onChanged(@Nullable List<Movie> movies) {
-                        mountRecyclerWithList(movies);
-                    }
-                });
+                if(((MainActivity )getActivity()).isOnline()){
+                    movieListViewModel.getFavMovies();
+                    movieListViewModel.getLiveDataMovies().observe(this, new Observer<List<Movie>>() {
+                        @Override
+                        public void onChanged(@Nullable List<Movie> movies) {
+                            mountRecyclerWithList(movies);
+                        }
+                    });
+                } else {
+                    buildNetworkMessage();
+                }
                 break;
         }
         buildRecycler();
@@ -135,17 +147,11 @@ public class MoviesFragment extends Fragment {
         recyclerView.setAdapter(mMoviesAdapter);
     }
 
-    private void buidlNetworkMessage() {
+    private void buildNetworkMessage() {
         mErrorMessage.setText(R.string.no_network);
         mRecyclerView.setAdapter(null);
         showRecyclerView(false);
         Snackbar mySnackbar = Snackbar.make(mRelativeLayoutList,R.string.try_again, Snackbar.LENGTH_SHORT);
-//        mySnackbar.setAction(R.string.yes, new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                getMovies(RetrofitClientInstance.getRetrofitInstance().create(MoviesApi.class).callListPopular(BuildConfig.API_KEY));
-//            }
-//        });
         mySnackbar.show();
     }
 
