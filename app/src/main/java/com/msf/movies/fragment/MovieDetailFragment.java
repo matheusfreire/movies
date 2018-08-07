@@ -48,6 +48,8 @@ public class MovieDetailFragment extends Fragment implements VideoAdapter.OnClic
 
     public static final String KEY_MOVIE = "movie";
     public static final String PATTER_DATE_BR = "dd/MM/yyyy";
+    public static final int DURATION = 1800;
+    public static final int DIVIDER = 2;
     private Movie mItem;
 
     @BindView(R.id.progress_loading)
@@ -164,7 +166,7 @@ public class MovieDetailFragment extends Fragment implements VideoAdapter.OnClic
     private void animateRatingbar(RatingBar mRatebar) {
         float current = mRatebar.getRating();
         ObjectAnimator anim = ObjectAnimator.ofFloat(mRatebar, "mRatebar", 0, current);
-        anim.setDuration(1800);
+        anim.setDuration(DURATION);
         anim.start();
     }
 
@@ -189,7 +191,7 @@ public class MovieDetailFragment extends Fragment implements VideoAdapter.OnClic
     }
 
     private float getVoteAverage(Movie movieResult) {
-        return (float) movieResult.getVoteAverage() / 2;
+        return (float) movieResult.getVoteAverage() / DIVIDER;
     }
 
     private String getDateReleased(Date releaseDate) {
