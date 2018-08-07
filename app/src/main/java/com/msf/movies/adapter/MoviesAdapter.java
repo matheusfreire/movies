@@ -62,6 +62,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         }
     }
 
+    public List<Movie> getListMovies() {
+        return mListMovies;
+    }
+
     private Movie getItem(int position){
         return mListMovies.get(position);
     }

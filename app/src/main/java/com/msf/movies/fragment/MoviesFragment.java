@@ -2,6 +2,7 @@ package com.msf.movies.fragment;
 
 import android.arch.lifecycle.Observer;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -26,6 +27,7 @@ import com.msf.movies.util.MoviesApi;
 import com.msf.movies.util.RetrofitClientInstance;
 import com.msf.movies.viewmodel.MovieListViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -36,6 +38,7 @@ public class MoviesFragment extends Fragment {
     private static final int MOVIE_POPULAR = 1;
     private static final int MOVIE_MORE_VOTED = 2;
     private static final int FAVORITES_MOVIES = 3;
+    public static final String KEY_MOVIES = "movies";
 
     private int movieType;
 
@@ -141,6 +144,20 @@ public class MoviesFragment extends Fragment {
             mProgressLoading.setVisibility(View.INVISIBLE);
             showRecyclerView(false);
         }
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if(savedInstanceState != null){
+            mountRecyclerWithList(savedInstanceState.<Movie>getParcelableArrayList(KEY_MOVIES));
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putParcelableArrayList(KEY_MOVIES, (ArrayList<? extends Parcelable>) mMoviesAdapter.getListMovies());
+        super.onSaveInstanceState(outState);
     }
 
     private void setAdapterToRecycler(@NonNull RecyclerView recyclerView) {

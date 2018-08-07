@@ -85,27 +85,19 @@
                 android:paddingBottom="5dp" />
         </LinearLayout>
 
-        <View style="@style/divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@+id/description"
-            android:layout_above="@+id/view_videos"/>
-
-        <include android:id="@+id/view_videos"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/description"
-            layout="@layout/videos"/>
-
-        <View style="@style/divider"
-            android:layout_below="@+id/view_videos"
-            android:layout_above="@+id/view_reviews"/>
 
         <include android:id="@+id/view_reviews"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/view_videos"
+            android:layout_below="@+id/description"
             layout="@layout/reviews"/>
+
+
+        <include android:id="@+id/view_videos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view_reviews"
+            layout="@layout/videos"/>
 
 
     </RelativeLayout>

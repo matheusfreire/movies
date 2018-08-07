@@ -23,6 +23,7 @@ import com.msf.movies.viewmodel.MovieListViewModel;
 
 public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesOnClickListener {
 
+    public static final String KEY_FRAGMENT = "movieFragment";
     private MovieListViewModel mMovieListViewModel;
 
     private MoviesFragment fragment;
@@ -35,7 +36,11 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         mMovieListViewModel = ViewModelProviders.of(this).get(MovieListViewModel.class);
-        replaceWithFragment(1);
+        if(savedInstanceState == null){
+            replaceWithFragment(1);
+        } else {
+            fragment = (MoviesFragment) getSupportFragmentManager().getFragment(savedInstanceState, KEY_FRAGMENT);
+        }
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -77,5 +82,17 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         ActivityOptionsCompat options = ActivityOptionsCompat.
                 makeSceneTransitionAnimation(this, Pair.create(views[0], "poster"),Pair.create(views[1], "titleMovie"));
         startActivity(intent, options.toBundle());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        getSupportFragmentManager().putFragment(outState, KEY_FRAGMENT, fragment);
     }
 }
