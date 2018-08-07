@@ -14,7 +14,7 @@ import com.msf.movies.model.Movie;
 public abstract class MovieDatabase extends RoomDatabase {
 
     private static final Object LOCK = new Object();
-    private static final String DATABASE_NAME = "todolist";
+    private static final String DATABASE_NAME = "films";
     private static MovieDatabase sInstance;
 
     public static MovieDatabase getInstance(Context context) {
